@@ -1,8 +1,8 @@
 from flask import Flask
 from flask_restful import Api
 
-from api import VendingMachineStockAPI, VendingMachineAPI
-from models import db
+from api.api import VendingMachineStockAPI, VendingMachineAPI
+from model.models import db
 
 app = Flask(__name__)
 
