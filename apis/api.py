@@ -10,14 +10,18 @@ from models.model import VendingMachine, VendingMachineStock, db
 class VendingMachineStockAPI(Resource):
     @staticmethod
     def get(vending_machine_id):
-        items = VendingMachineStock.query.filter_by(vending_machine_id=vending_machine_id).all()
+        items = VendingMachineStock.query.filter_by(
+            vending_machine_id=vending_machine_id
+        ).all()
         return {"items": [{"name": i.name, "quantity": i.quantity} for i in items]}
 
     @staticmethod
     def post(vending_machine_id):
         data = request.json
         for item in data["items"]:
-            stock = VendingMachineStock(vending_machine_id, item["name"], item["quantity"])
+            stock = VendingMachineStock(
+                vending_machine_id, item["name"], item["quantity"]
+            )
             db.session.add(stock)
         db.session.commit()
         return {"message": "Stock items added successfully"}, 201
@@ -37,7 +41,9 @@ class VendingMachineStockAPI(Resource):
     def delete(vending_machine_id):
         data = request.json
         for item in data["items"]:
-            VendingMachineStock.query.filter_by(vending_machine_id=vending_machine_id, name=item["name"]).delete()
+            VendingMachineStock.query.filter_by(
+                vending_machine_id=vending_machine_id, name=item["name"]
+            ).delete()
         db.session.commit()
         return {"message": "Stock items deleted successfully"}, 200
 
@@ -52,7 +58,9 @@ class VendingMachineAPI(Resource):
                     "id": m.id,
                     "location": m.location,
                     "name": m.name,
-                    "stock": [{"product": i.name, "quantity": i.quantity} for i in m.stock],
+                    "stock": [
+                        {"product": i.name, "quantity": i.quantity} for i in m.stock
+                    ],
                 }
                 for m in machines
             ]
