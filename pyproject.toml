@@ -2,9 +2,10 @@
 name = "vending-machine"
 version = "0.1.0"
 description = ""
-authors = ["mansaseals <37607676+mansaseals@users.noreply.github.com>"]
+authors = ["JayAree999 <jayyqwe123@gmail.com>"]
 readme = "README.md"
 packages = [{include = "vending_machine"}]
+
 
 [tool.poetry.dependencies]
 python = "^3.8"
