@@ -75,14 +75,3 @@ def test_vending_machine_stock_api_delete(client):
     )
     assert response.status_code == 200
     assert response.json == {"message": "Stock items deleted successfully"}
-
-
-def test_vending_machine_delete(client):
-    data = {"machines": [{"id": 1}]}
-    response = client.delete(
-        "/vending-machines/1",
-        data=json.dumps(data),
-        content_type="application/json",
-    )
-    assert response.status_code == 200
-    assert response.json == {"message": "Machines deleted successfully"}

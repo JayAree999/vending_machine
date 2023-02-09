@@ -1,3 +1,4 @@
+import pytest
 from flask import Flask
 from flask_restful import Api
 
@@ -11,6 +12,11 @@ def create_app():
     app.config[
         "SQLALCHEMY_DATABASE_URI"
     ] = "mysql+pymysql://root:mypassword@127.0.0.1:3306/mydb"
+    app.config.update(
+        {
+            "TESTING": True,
+        }
+    )
     db.init_app(app)
 
     with app.app_context():
