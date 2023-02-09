@@ -38,9 +38,19 @@ def test_vending_machine_stock_api_get(client):
 def test_vending_machine_api_get(client):
     response = client.get("/vending-machines")
     assert response.status_code == 200
-    assert response.json == {'machines': [{'id': 1, 'location': 'Location1', 'name': 'VendingMachine1',
-                                           'stock': [{'product': 'item1', 'quantity': 15},
-                                                     {'product': 'item2', 'quantity': 20}]}]}
+    assert response.json == {
+        "machines": [
+            {
+                "id": 1,
+                "location": "Location1",
+                "name": "VendingMachine1",
+                "stock": [
+                    {"product": "item1", "quantity": 15},
+                    {"product": "item2", "quantity": 20},
+                ],
+            }
+        ]
+    }
 
 
 def test_vending_machine_stock_api_put(client):
