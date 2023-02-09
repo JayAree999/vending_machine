@@ -1,7 +1,7 @@
 from flask_restful import Resource
 from flask import request
 
-from model.models import VendingMachineStock, db, VendingMachine
+from models.model import VendingMachineStock, db, VendingMachine
 
 
 class VendingMachineStockAPI(Resource):
