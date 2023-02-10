@@ -37,7 +37,15 @@ jobs:
   build-mysql:
     runs-on: ubuntu-20.04 # is Ubuntu environment
 
-    # ... some other config ...
+    services:
+      db:
+        image: mysql:8.0
+        environment:
+          MYSQL_ROOT_PASSWORD: mypassword
+          MYSQL_DATABASE: mydb
+        ports:
+          - "3306:3306"
+
 
     steps:
       - # ... some prepare steps, like action/checkout, run some script without MySQL, etc.
