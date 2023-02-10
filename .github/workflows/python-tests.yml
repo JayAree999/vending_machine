@@ -48,7 +48,6 @@ jobs:
 
 
     steps:
-      - # ... some prepare steps, like action/checkout, run some script without MySQL, etc.
 
       - name: Shutdown Ubuntu MySQL (SUDO)
         run: sudo service mysql stop # Shutdown the Default MySQL, "sudo" is necessary, please not remove it
