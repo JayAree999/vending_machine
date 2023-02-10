@@ -1,8 +1,11 @@
+import pymysql
 from flask import Flask
 from flask_restful import Api
 
 from apis.api import VendingMachineAPI, VendingMachineStockAPI
 from models.model import db
+
+pymysql.connect(user="root", passwd="mypassword", host="localhost", port=3306)
 
 
 def create_app():
