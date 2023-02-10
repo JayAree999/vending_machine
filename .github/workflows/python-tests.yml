@@ -57,11 +57,6 @@ jobs:
 
     steps:
 
-      - uses: actions/checkout@v2
-      - name: Create docker containers
-        run: docker-compose up
-
-
       - name: Set up Python ${{ env.PYTHON_VERSION }}
         uses: actions/setup-python@v2
         with:
