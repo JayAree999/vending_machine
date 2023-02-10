@@ -1,7 +1,6 @@
 flask~=2.2.2
 flask-sqlalchemy
 flask_restful
-pymysql
 pre-commit
-
 pytest~=7.2.1
+pymysql
