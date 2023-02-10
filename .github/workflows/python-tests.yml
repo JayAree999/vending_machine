@@ -8,18 +8,6 @@ env:
 
 jobs:
 
-  services:
-    mysql:
-      image: mysql
-      ports:
-        - 3306
-      env:
-        MYSQL_USER: user
-        MYSQL_PASSWORD: password
-        MYSQL_DATABASE: test
-        MYSQL_ROOT_PASSWORD: mypassword
-      options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
-
   lint:
     runs-on: ubuntu-20.04
 
@@ -49,7 +37,19 @@ jobs:
 
   test-and-coverage:
     runs-on: ubuntu-20.04
-
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ALLOW_EMPTY_PASSWORD: yes
+          MYSQL_DATABASE: your-db_dev
+        ports:
+          - 3306
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
     steps:
       - uses: actions/checkout@v2
 
