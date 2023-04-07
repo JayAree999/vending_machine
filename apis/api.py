@@ -1,7 +1,7 @@
 from flask_restful import Resource
 from flask import request
 
-from model.models import VendingMachineStock, db, VendingMachine
+from models.model import VendingMachineStock, db, VendingMachine  # Update the import
 
 
 class VendingMachineStockAPI(Resource):
@@ -10,14 +10,14 @@ class VendingMachineStockAPI(Resource):
         items = VendingMachineStock.query.filter_by(
             vending_machine_id=vending_machine_id
         ).all()
-        return {"items": [{"name": i.name, "quantity": i.quantity} for i in items]}
+        return {"items": [{"name": i.product_name, "quantity": i.quantity} for i in items]}  # Update the name attribute
 
     @staticmethod
     def post(vending_machine_id):
         data = request.json
         for item in data["items"]:
             stock = VendingMachineStock(
-                vending_machine_id, item["name"], item["quantity"]
+                vending_machine_id, item["name"], item["quantity"], item["price"]
             )
             db.session.add(stock)
         db.session.commit()
@@ -28,7 +28,7 @@ class VendingMachineStockAPI(Resource):
         data = request.json
         for item in data["items"]:
             stock = VendingMachineStock.query.filter_by(
-                vending_machine_id=vending_machine_id, name=item["name"]
+                vending_machine_id=vending_machine_id, product_name=item["name"]  # Update the name attribute
             ).first()
             stock.quantity = item["quantity"]
         db.session.commit()
@@ -39,7 +39,7 @@ class VendingMachineStockAPI(Resource):
         data = request.json
         for item in data["items"]:
             VendingMachineStock.query.filter_by(
-                vending_machine_id=vending_machine_id, name=item["name"]
+                vending_machine_id=vending_machine_id, product_name=item["name"]  # Update the name attribute
             ).delete()
         db.session.commit()
         return {"message": "Stock items deleted successfully"}, 200
@@ -56,7 +56,7 @@ class VendingMachineAPI(Resource):
                     "location": m.location,
                     "name": m.name,
                     "stock": [
-                        {"product": i.name, "quantity": i.quantity} for i in m.stock
+                        {"product": i.product_name, "quantity": i.quantity} for i in m.stocks  # Update the name attribute and relationship attribute
                     ],
                 }
                 for m in machines
