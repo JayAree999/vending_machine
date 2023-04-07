@@ -90,11 +90,14 @@ class VendingMachineStockAPI(Resource):
         db.session.commit()
         return {"message": "Stock items deleted successfully"}, 200
 
-
 class VendingMachineAPI(Resource):
     @staticmethod
     def get():
         machines = VendingMachine.query.all()
+
+        # Print the fetched VendingMachine instances
+        print("Fetched machines:", machines)
+
         return {
             "machines": [
                 {
