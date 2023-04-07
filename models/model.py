@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, Integer, String, Float, ForeignKey
 from sqlalchemy.orm import relationship
+from datetime import datetime
 
 db = SQLAlchemy()
 
@@ -30,12 +31,15 @@ class VendingMachineStock(db.Model):
     vending_machine_id = Column(Integer, ForeignKey('vending_machines.id'), nullable=False)
 
     vending_machine = relationship('VendingMachine', back_populates='stocks')
-
+    timestamp = Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    
     def __init__(self, vending_machine_id, product_name, quantity, price):
         self.vending_machine_id = vending_machine_id
         self.product_name = product_name
         self.quantity = quantity
         self.price = price
+        self.timestamp = datetime.utcnow()
+
 
     def __repr__(self):
         return f"<VendingMachineStock(id={self.id}, product_name='{self.product_name}', quantity={self.quantity}, price={self.price}, vending_machine_id={self.vending_machine_id})>"

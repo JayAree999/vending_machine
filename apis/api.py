@@ -1,8 +1,54 @@
 from flask_restful import Resource
 from flask import request
+from models.model import VendingMachineStock, db, VendingMachine
+from sqlalchemy import func
 
-from models.model import VendingMachineStock, db, VendingMachine  # Update the import
 
+class VendingMachineTimelineAPI(Resource):
+    @staticmethod
+    def get(vending_machine_id):
+        result = db.session.query(
+            VendingMachineStock.product_name,
+            func.sum(VendingMachineStock.quantity).label("quantity"),
+            func.date(VendingMachineStock.timestamp).label("date"),
+        ).filter_by(vending_machine_id=vending_machine_id).group_by(
+            VendingMachineStock.product_name,
+            func.date(VendingMachineStock.timestamp),
+        ).all()
+
+        return {
+            "timeline": [
+                {
+                    "product_name": r.product_name,
+                    "quantity": float(r.quantity),  # Convert Decimal to float
+                    "date": r.date.isoformat(),
+                }
+                for r in result
+            ]
+        }
+
+class ProductTimelineAPI(Resource):
+    @staticmethod
+    def get(product_name):
+        result = db.session.query(
+            VendingMachineStock.vending_machine_id,
+            func.sum(VendingMachineStock.quantity).label("quantity"),
+            func.date(VendingMachineStock.timestamp).label("date"),
+        ).filter_by(product_name=product_name).group_by(
+            VendingMachineStock.vending_machine_id,
+            func.date(VendingMachineStock.timestamp),
+        ).all()
+
+        return {
+            "timeline": [
+                {
+                    "vending_machine_id": r.vending_machine_id,
+                    "quantity": float(r.quantity),  # Convert Decimal to float
+                    "date": r.date.isoformat(),
+                }
+                for r in result
+            ]
+        }
 
 class VendingMachineStockAPI(Resource):
     @staticmethod
@@ -10,7 +56,7 @@ class VendingMachineStockAPI(Resource):
         items = VendingMachineStock.query.filter_by(
             vending_machine_id=vending_machine_id
         ).all()
-        return {"items": [{"name": i.product_name, "quantity": i.quantity} for i in items]}  # Update the name attribute
+        return {"items": [{"name": i.product_name, "quantity": i.quantity} for i in items]}  # Name attribute updated
 
     @staticmethod
     def post(vending_machine_id):
@@ -28,7 +74,7 @@ class VendingMachineStockAPI(Resource):
         data = request.json
         for item in data["items"]:
             stock = VendingMachineStock.query.filter_by(
-                vending_machine_id=vending_machine_id, product_name=item["name"]  # Update the name attribute
+                vending_machine_id=vending_machine_id, product_name=item["name"]  # Name attribute updated
             ).first()
             stock.quantity = item["quantity"]
         db.session.commit()
@@ -39,7 +85,7 @@ class VendingMachineStockAPI(Resource):
         data = request.json
         for item in data["items"]:
             VendingMachineStock.query.filter_by(
-                vending_machine_id=vending_machine_id, product_name=item["name"]  # Update the name attribute
+                vending_machine_id=vending_machine_id, product_name=item["name"]  # Name attribute updated
             ).delete()
         db.session.commit()
         return {"message": "Stock items deleted successfully"}, 200
@@ -56,12 +102,13 @@ class VendingMachineAPI(Resource):
                     "location": m.location,
                     "name": m.name,
                     "stock": [
-                        {"product": i.product_name, "quantity": i.quantity} for i in m.stocks  # Update the name attribute and relationship attribute
+                        {"product": i.product_name, "quantity": i.quantity} for i in m.stocks
                     ],
                 }
                 for m in machines
             ]
         }
+
 
     @staticmethod
     def post():
